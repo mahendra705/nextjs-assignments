@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from "react";
+import React, { FC, memo, useMemo } from "react";
 import Link from "next/link";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,21 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ post }) => {
-
   const router = useRouter();
+
+  // eslint-disable-next-line react/display-name
+  const DateComponent: FC<any> = memo(({ data }) => {
+    const parsedDate = useMemo(() => {
+      const date = new Date(data);
+      const day = String(date.getUTCDate()).padStart(2, "0");
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+      const year = date.getUTCFullYear();
+
+      return `${day}-${month}-${year}`;
+    }, [data]);
+
+    return <div>{parsedDate}</div>;
+  });
 
   const handleDelete = async (id: string) => {
     try {
@@ -28,7 +41,7 @@ const Card: React.FC<CardProps> = ({ post }) => {
       });
       router.refresh();
     } catch (error) {
-      console.error('Error deleting post', error);
+      console.error("Error deleting post", error);
     }
   };
 
@@ -47,15 +60,19 @@ const Card: React.FC<CardProps> = ({ post }) => {
           {post.author}
         </span>
         <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          {post.datePublished}
+          <DateComponent data={post.datePublished} />
         </span>
         <Link href={`/blog/${post._id}`}>
           <p className="inline-block bg-blue-500 rounded-full px-3 py-1 text-sm font-semibold text-white mt-2">
             Read More
           </p>
         </Link>
-        <Button className="inline-block bg-blue-500 rounded-full px-3 py-1 text-sm font-semibold text-white mt-2" onClick={() => handleDelete(post._id)}>Delete</Button>
-
+        <Button
+          className="inline-block bg-blue-500 rounded-full px-3 py-1 text-sm font-semibold text-white mt-2"
+          onClick={() => handleDelete(post._id)}
+        >
+          Delete
+        </Button>
       </div>
     </div>
   );

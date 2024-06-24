@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import Card from "../components/Card";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 interface BlogPost {
   id: number;
@@ -10,6 +11,10 @@ interface BlogPost {
   date_published: string;
   content: string;
 }
+
+const LazyLoadedComponent = dynamic(() => import('../components/LazyLoadedComponent'), {
+  loading: () => <p>Loading...</p>,
+});
 
 const getPosts = async () => {
   try {
@@ -41,6 +46,7 @@ const Blog = async() => {
           <Card key={post._id} post={post} />
         ))}
       </div>
+      <LazyLoadedComponent />
     </>
   );
 };

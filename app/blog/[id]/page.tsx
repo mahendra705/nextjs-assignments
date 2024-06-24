@@ -4,8 +4,8 @@ import axios from "axios";
 
 export default async function BlogDetail({ params }: { params: { id: string } }) {
     const id = params.id;
-    const res = await axios.get(`https://dummyapi.online/api/blogposts/${id}`);
-    const post: any = res.data;
+    const res = await axios.get(`http://localhost:3000/api/posts/${id}`);
+    const post: any = res.data.data;
     return (
         <div className="max-w-2xl mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
@@ -13,7 +13,7 @@ export default async function BlogDetail({ params }: { params: { id: string } })
                 Author: <span className="font-semibold">{post.author}</span>
             </p>
             <p className="text-gray-600 mb-4">
-                Published Date: <span className="font-semibold">{post.date_published}</span>
+                Published Date: <span className="font-semibold">{post.datePublished}</span>
             </p>
             <div className="prose">
                 {post.content.split("\n").map((paragraph: any, index: any) => (
